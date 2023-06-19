@@ -3,6 +3,8 @@ this is a "revival" commit of the appwrite almost netflix app
 since the scraper is related to this app i decided to include it in almostnetflixprojectsetup folder  
 original project can be found [here](https://github.com/Meldiron/almost-netflix-project-setup)
 
+since this is more like a showcase demo I removed signup and the users login as anonymous users
+
 this fork is focused on performance optimization and web compatibility
 
 - removed many notifylisteners that caused too many unecessary rebuilds
