@@ -1,10 +1,10 @@
 //
 // list.dart
 // appflix
-// 
+//
 // Author: wess (me@wess.io)
 // Created: 01/03/2022
-// 
+//
 // Copywrite (c) 2022 Wess.io
 //
 
@@ -15,7 +15,6 @@ import 'package:netflix_clone/screens/details.dart';
 import 'package:provider/provider.dart';
 import 'package:netflix_clone/data/entry.dart';
 import 'package:netflix_clone/providers/entry.dart';
-
 
 class ContentList extends StatelessWidget {
   final String title;
@@ -29,7 +28,8 @@ class ContentList extends StatelessWidget {
     required this.contentList,
     required this.isOriginal,
     bool rounded = false,
-  }) : _rounded = rounded, super(key: key);
+  })  : _rounded = rounded,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +41,9 @@ class ContentList extends StatelessWidget {
           child: Text(
             title,
             style: const TextStyle(
-              color: Colors.white, 
-              fontWeight: FontWeight.bold, 
-              fontSize: 20.0
-            ),
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0),
           ),
         ),
         SizedBox(
@@ -54,28 +53,29 @@ class ContentList extends StatelessWidget {
             itemCount: contentList.length,
             itemBuilder: (context, int count) {
               final Entry current = contentList[count];
+              var f = context.watch<EntryProvider>().imageFor(current);
+
               return GestureDetector(
                 onTap: () async {
                   await showDialog(
-                    context: context, 
-                    builder: (context) => DetailsScreen(entry: current)
-                  );
+                      context: context,
+                      builder: (context) => DetailsScreen(entry: current));
                 },
                 child: Container(
-                  height: 100,
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                  child: FutureBuilder<Uint8List>(
-                    future: context.read<EntryProvider>().imageFor(current),
-                    builder: (context, snapshot) => snapshot.hasData
-                        ? Image.memory(
-                            snapshot.data!,
-                            fit: BoxFit.cover,
-                          )
-                        : Container(
-                            color: Colors.black,
-                          ),
-                  )
-                ),
+                    height: 100,
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                    child: FutureBuilder<Uint8List>(
+                      future: f,
+                      builder: (context, snapshot) => snapshot.hasData
+                          ? Image.memory(
+                              snapshot.data!,
+                              fit: BoxFit.cover,
+                            )
+                          : Container(
+                              color: Colors.black,
+                            ),
+                    )),
               );
             },
           ),

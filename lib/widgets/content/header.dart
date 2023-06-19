@@ -1,15 +1,16 @@
 //
 // header.dart
 // appflix
-// 
+//
 // Author: wess (me@wess.io)
 // Created: 01/03/2022
-// 
+//
 // Copywrite (c) 2022 Wess.io
 //
 
 import 'dart:typed_data';
 
+import 'package:expand_tap_area/expand_tap_area.dart';
 import 'package:netflix_clone/data/entry.dart';
 import 'package:netflix_clone/providers/entry.dart';
 import 'package:netflix_clone/providers/watchlist.dart';
@@ -20,25 +21,27 @@ import 'package:provider/provider.dart';
 
 class ContentHeader extends StatelessWidget {
   final Entry featured;
-  
   const ContentHeader({Key? key, required this.featured}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    
-    return FutureBuilder(
-      future: context.read<EntryProvider>().imageFor(featured),
-      builder: (context, snapshot) {
-        if(snapshot.hasData == false || snapshot.data == null) {
-          return const SizedBox(
-            height: 500,
-            child: Center(child: CircularProgressIndicator(),),
-          );
-        }
+    bool hasTapped = false;
 
-        return Stack(
-          alignment: Alignment.center,
-          children: [
+    bool isOnList = context.watch<WatchListProvider>().isOnList(featured);
+    Future f = context.watch<EntryProvider>().imageFor(featured);
+    return FutureBuilder(
+        future: f,
+        builder: (context, snapshot) {
+          if (snapshot.hasData == false || snapshot.data == null) {
+            return const SizedBox(
+              height: 500,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          return Stack(alignment: Alignment.center, children: [
             Container(
               height: 500,
               decoration: BoxDecoration(
@@ -59,34 +62,18 @@ class ContentHeader extends StatelessWidget {
               ),
             ),
             Positioned(
-              bottom: 120,
+              bottom: 100,
               child: SizedBox(
-                width: 250,
-                child: Text(
-                  featured.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              ),
-            ),
-            Positioned(
-              bottom: 88,
-              child: SizedBox(
-                width: 250,
-                child: Text(
-                  featured.tags.join(" • "),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.normal,
-                  ),
-                )
-              ),
+                  width: 250,
+                  child: Text(
+                    featured.name,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )),
             ),
             Positioned(
               right: 0,
@@ -96,50 +83,46 @@ class ContentHeader extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   const Spacer(),
-                  VerticalIconButton(
-                    icon: context.read<WatchListProvider>().isOnList(featured) ? Icons.check : Icons.add,
-                    title: 'Watchlist',
-                    tap: () {
-                      if(context.read<WatchListProvider>().isOnList(featured)){
-                        context.read<WatchListProvider>().remove(featured);
-                      } else {
-                        context.read<WatchListProvider>().add(featured);
-                      }
-                    },
-                  ),
-
-                  const SizedBox(width: 40),
-
-                  MaterialButton(
-                    color: Colors.white,
-                    child: Row(
-                      children: const [
-                        Icon(Icons.play_arrow),
-                        Text("Play")
-                      ],
+                  ExpandTapWidget(
+                    onTap: () {},
+                    tapPadding: const EdgeInsets.all(35.0),
+                    child: VerticalIconButton(
+                      icon: isOnList ? Icons.check : Icons.add,
+                      title: 'Watchlist',
+                      tap: () {
+                        if (hasTapped == false) {
+                          hasTapped = true;
+                          if (isOnList) {
+                            context.read<WatchListProvider>().remove(featured);
+                          } else {
+                            context.read<WatchListProvider>().add(featured);
+                          }
+                        }
+                      },
                     ),
-                    onPressed: (){}
                   ),
-
                   const SizedBox(width: 40),
-
+                  MaterialButton(
+                      color: Colors.white,
+                      child: const Row(
+                        children: [Icon(Icons.play_arrow), Text("Play")],
+                      ),
+                      onPressed: () {}),
+                  const SizedBox(width: 40),
                   VerticalIconButton(
                     icon: Icons.info,
                     title: 'Info',
                     tap: () async {
                       await showDialog(
-                        context: context, 
-                        builder: (context) => DetailsScreen(entry: featured)
-                      );
+                          context: context,
+                          builder: (context) => DetailsScreen(entry: featured));
                     },
                   ),
                   const Spacer(),
                 ],
               ),
             )
-          ]
-        );
-      }
-    );
+          ]);
+        });
   }
 }

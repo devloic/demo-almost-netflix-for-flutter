@@ -50,7 +50,10 @@ class AccountProvider extends ChangeNotifier {
   Future<void> register(String email, String password, String? name) async {
     try {
       final result = await ApiClient.account.create(
-          userId: appwrite.ID.unique(), email: email, password: password, name: name);
+          userId: appwrite.ID.unique(),
+          email: email,
+          password: password,
+          name: name);
 
       _current = result;
 
@@ -62,10 +65,7 @@ class AccountProvider extends ChangeNotifier {
 
   Future<void> login(String email, String password) async {
     try {
-      final result = await ApiClient.account.createEmailSession(
-        email: email,
-        password: password,
-      );
+      final result = await ApiClient.account.createAnonymousSession();
       _session = result;
 
       Store.set("session", json.encode(result.toMap()));

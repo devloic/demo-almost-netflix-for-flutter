@@ -1,0 +1,17 @@
+# flutter_native_splash-development.yaml
+flutter_native_splash:
+  color: "#000000"
+  image: assets/netflix_logo0.png
+  branding: assets/netflix_logo0.png
+  color_dark: "#000000"
+  image_dark: assets/netflix_logo0.png
+  branding_dark: assets/netflix_logo0.png
+  icon_background_color: "#000000"
+
+  android_12:
+    image: assets/netflix_logo0.png
+    icon_background_color: "#000000"
+    image_dark: assets/netflix_logo0.png
+    icon_background_color_dark: "#000000"
+    color: "#000000"
+

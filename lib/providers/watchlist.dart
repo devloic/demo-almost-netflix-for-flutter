@@ -17,10 +17,9 @@ import 'package:netflix_clone/data/entry.dart';
 import 'package:flutter/material.dart';
 
 class WatchListProvider extends ChangeNotifier {
-
-  static final String _databaseId = appwrite.ID.custom("default2");
+  static final String _databaseId = appwrite.ID.custom("default");
   final String _collectionId = appwrite.ID.custom("watchlists");
-  static final String _bucketId = appwrite.ID.custom("default1");
+  static final String _bucketId = appwrite.ID.custom("posters");
 
   List<Entry> _entries = [];
   List<Entry> get entries => _entries;
@@ -30,71 +29,50 @@ class WatchListProvider extends ChangeNotifier {
   }
 
   Future<List<Entry>> list() async {
-    final user = await this.user;
-
-    final watchlist = await ApiClient.database.listDocuments(
-      databaseId: _databaseId,
-      collectionId: _collectionId,
-    );
-
-    final movieIds = watchlist.documents
-        .map((document) => document.data["movieId"])
-        .toList();
-    final entries =
-        (await ApiClient.database.listDocuments(databaseId: _databaseId, collectionId: appwrite.ID.custom('movies')))
-            .documents
-            .map((document) => Entry.fromJson(document.data))
-            .toList();
-    final filtered =
-        entries.where((entry) => movieIds.contains(entry.id)).toList();
-
-    _entries = filtered;
-
-    notifyListeners();
+    _entries;
 
     return _entries;
   }
 
   Future<void> add(Entry entry) async {
     final user = await this.user;
-
-    var result = await ApiClient.database.createDocument(
+    _entries.add(entry);
+    notifyListeners();
+    ApiClient.database.createDocument(
         databaseId: _databaseId,
         collectionId: _collectionId,
         documentId: appwrite.ID.unique(),
         data: {
           "userId": user.$id,
-          "movieId": entry.id,
+          "movie": entry.id,
         });
-
-    // _entries.add(Entry.fromJson(result.data));
-
-    list();
   }
 
   Future<void> remove(Entry entry) async {
     final user = await this.user;
+    _entries.removeWhere((element) => element.id == entry.id);
+    notifyListeners();
 
     final result = await ApiClient.database.listDocuments(
         databaseId: _databaseId,
         collectionId: _collectionId,
         queries: [
           appwrite.Query.equal("userId", user.$id),
-          appwrite.Query.equal("movieId", entry.id)
+          appwrite.Query.equal("movie", entry.id)
         ]);
 
     final id = result.documents.first.$id;
 
-    await ApiClient.database
-        .deleteDocument(databaseId: _databaseId, collectionId: _collectionId, documentId: id);
-
-    list();
+    await ApiClient.database.deleteDocument(
+        databaseId: _databaseId, collectionId: _collectionId, documentId: id);
   }
 
   Future<Uint8List> imageFor(Entry entry) async {
-    return await ApiClient.storage.getFileView(
+    return await ApiClient.storage.getFilePreview(
       bucketId: _bucketId,
       fileId: entry.thumbnailImageId,
+      width: 80,
+      height: 80,
     );
   }
 

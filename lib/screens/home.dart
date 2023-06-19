@@ -1,12 +1,14 @@
 //
 // home.dart
 // appflix
-// 
+//
 // Author: wess (me@wess.io)
 // Created: 01/03/2022
-// 
+//
 // Copywrite (c) 2022 Wess.io
 //
+
+import 'dart:ui';
 
 import 'package:netflix_clone/providers/entry.dart';
 import 'package:netflix_clone/widgets/content/bar.dart';
@@ -16,31 +18,31 @@ import 'package:netflix_clone/widgets/previews.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
-
 class HomeScreen extends StatefulWidget {
-
- const  HomeScreen({required Key key}) : super(key: key);
+  const HomeScreen({required Key key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        // etc.
+      };
+}
+
 class _HomeScreenState extends State<HomeScreen> {
   double _scrollOffset = 0.0;
-  ScrollController _scrollController =
-      ScrollController(initialScrollOffset: 0.0);
+  ScrollController _scrollController = ScrollController(
+    initialScrollOffset: 0.0,
+  );
 
   @override
   void initState() {
-    _scrollController = ScrollController()
-      ..addListener(() {
-        setState(() {
-          _scrollOffset = _scrollController.offset;
-        });
-      });
-
-    
     super.initState();
   }
 
@@ -66,7 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
         controller: _scrollController,
         slivers: [
           SliverToBoxAdapter(
-            child: ContentHeader(featured: context.watch<EntryProvider>().featured),
+            child: ContentHeader(
+                featured: context.watch<EntryProvider>().featured),
           ),
           const SliverPadding(
             padding: EdgeInsets.only(top: 20),

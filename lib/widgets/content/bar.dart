@@ -1,10 +1,10 @@
 //
 // bar.dart
 // appflix
-// 
+//
 // Author: wess (me@wess.io)
 // Created: 01/03/2022
-// 
+//
 // Copywrite (c) 2022 Wess.io
 //
 
@@ -40,9 +40,8 @@ class ContentBar extends StatelessWidget {
                   const Spacer(),
                   _AppBarButton('My List', () async {
                     await showDialog(
-                      context: context, 
-                      builder: (context) => const WatchlistScreen()
-                    );
+                        context: context,
+                        builder: (context) => const WatchlistScreen());
                   }),
                 ],
               ),
@@ -63,7 +62,9 @@ class _AppBarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () { function(); },
+      onTap: () {
+        function();
+      },
       child: Text(
         title,
         style: const TextStyle(

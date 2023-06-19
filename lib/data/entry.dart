@@ -1,14 +1,12 @@
 //
 // entry.dart
 // appflix
-// 
+//
 // Author: wess (me@wess.io)
 // Created: 01/03/2022
-// 
+//
 // Copywrite (c) 2022 Wess.io
 //
-
-import 'package:netflix_clone/extensions/datetime.dart';
 
 class Entry {
   final String id;
@@ -17,16 +15,16 @@ class Entry {
   final String ageRestriction;
   final Duration durationMinutes;
   final String thumbnailImageId;
-  final List<String> genres;
-  final List<String> tags;
   final DateTime? netflixReleaseDate;
   final DateTime? releaseDate;
   final double trendingIndex;
   final bool isOriginal;
-  final List<String> cast;
+  final List<dynamic> cast;
+  final List<dynamic> genres;
+  final List<dynamic> tags;
 
   bool isEmpty() {
-    if(id.isEmpty || name.isEmpty) {
+    if (id.isEmpty || name.isEmpty) {
       return true;
     }
 
@@ -40,13 +38,13 @@ class Entry {
     required this.ageRestriction,
     required this.durationMinutes,
     required this.thumbnailImageId,
-    required this.genres,
-    required this.tags,
     this.netflixReleaseDate,
     this.releaseDate,
     required this.trendingIndex,
     required this.isOriginal,
     required this.cast,
+    required this.genres,
+    required this.tags,
   });
 
   static Entry empty() {
@@ -57,29 +55,29 @@ class Entry {
       ageRestriction: '',
       durationMinutes: const Duration(minutes: -1),
       thumbnailImageId: '',
-      genres: [],
-      tags: [],
       trendingIndex: -1,
       isOriginal: false,
       cast: [],
+      genres: [],
+      tags: [],
     );
   }
 
   static Entry fromJson(Map<String, dynamic> data) {
     return Entry(
       id: data['\$id'],
-      name: data['name'],
+      name: data['name'] ?? "",
       description: data['description'],
-      ageRestriction: data['ageRestriction'],
-      durationMinutes: Duration(minutes: data['durationMinutes']),
-      thumbnailImageId: data['thumbnailImageId'],
-      genres: data['genres'].cast<String>(),
-      tags: data['tags'].cast<String>(),
-      netflixReleaseDate: data['netflixReleaseDate'] != null ? DateTimeExt.fromUnixTimestampInt(data['netflixReleaseDate']) : null,
-      releaseDate: data['releaseDate'] != null ? DateTimeExt.fromUnixTimestampInt(data['releaseDate']) : null,
+      ageRestriction: data['ageRestriction'] ?? "",
+      durationMinutes: Duration(minutes: data['durationMinutes'] ?? 0),
+      thumbnailImageId: data['thumbnailImageId'] ?? "",
+      netflixReleaseDate: DateTime.parse(data['netflixReleaseDate']),
+      releaseDate: DateTime.parse(data['releaseDate']),
       trendingIndex: data['trendingIndex'],
       isOriginal: data['isOriginal'],
-      cast: data['cast'].cast<String>(),
+      cast: [],
+      genres: [],
+      tags: [],
     );
   }
 }
