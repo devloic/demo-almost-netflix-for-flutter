@@ -1,5 +1,37 @@
-# Almost Netflix - Flutter
+this is a "revival" commit of the appwrite almost netflix app  
 
+
+since the scraper is related to this app i decided to include it in almostnetflixprojectsetup folder  
+original project can be found [here](https://github.com/Meldiron/almost-netflix-project-setup)
+
+this fork is focused on performance optimization and web compatibility  
+  - removed many notifylisteners that caused too many unecessary rebuilds
+  - moved future creation outside of futurebuilders (one of them was generating a rebuild loop)
+  - changed context.read =context.write where relevant according to provider recommendations
+  - reduced queries to database for watchlist logic in providers
+  - using getFilePreview so the app doesnt handle huge image files
+  - removed  
+    ` _scrollController = ScrollController()
+      ..addListener(() {
+        setState(() {
+          _scrollOffset = _scrollController.offset;
+        });
+      }); 
+      `  
+      in home.dart, it was causing rebuilds everytime the user scrolled
+      down which slowed the scrolling tremendously  
+      
+possible improvements:
+  - change scraper so it stores different image sizes according to app
+ needs ( the app for now downloads all the hires images)
+
+ suggestion for appwrite:  
+ I guess getFilePreview is working on client side. Would be cool to have
+ a cloudinary like functionality on appwrite where images get resized/cached
+ dynamically on server side according to parameters in the url of the
+ images
+
+# Almost Netflix - Flutter
 
 ![Banner](readme_banner.png)
 
@@ -19,7 +51,6 @@ $ flutter run
 Make sure to update Endpoint and ProjectID in `lib/api/client.dart`.
 
 The application will be listening on port `3000`. You can visit in on URL `http://localhost:3000`.
-
 
 ### `assets`
 
