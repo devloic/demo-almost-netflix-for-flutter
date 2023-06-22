@@ -107,10 +107,16 @@ class ContentHeader extends StatelessWidget {
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Align(
-                              alignment: Alignment.topCenter,
-                              child: Icon(Icons.play_arrow)),
-                          Text("Play")
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(Icons.play_arrow, color: Colors.black),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text('Play'),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                       onPressed: () {}),
