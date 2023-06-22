@@ -105,7 +105,13 @@ class ContentHeader extends StatelessWidget {
                   MaterialButton(
                       color: Colors.white,
                       child: const Row(
-                        children: [Icon(Icons.play_arrow), Text("Play")],
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Align(
+                              alignment: Alignment.topCenter,
+                              child: Icon(Icons.play_arrow)),
+                          Text("Play")
+                        ],
                       ),
                       onPressed: () {}),
                   const SizedBox(width: 40),

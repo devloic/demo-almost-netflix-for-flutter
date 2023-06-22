@@ -59,8 +59,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   minHeight: viewportConstraints.maxHeight,
                 ),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     _DetailHeader(featured: widget._entry),
                     Padding(
@@ -79,7 +79,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                       child: Text("Genre: ${widget._entry.genres.join(", ")}",
                           style: const TextStyle(
-                              fontSize: 12, color: Colors.white)),
+                              fontSize: 14, color: Colors.white)),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -94,23 +94,27 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     Row(
                       children: [
                         const Spacer(),
-                        VerticalIconButton(
-                            icon: isOnList ? Icons.check : Icons.add,
-                            title: "My List",
-                            tap: () {
-                              if (hasTapped == false) {
-                                hasTapped = true;
-                                if (isOnList) {
-                                  context
-                                      .read<WatchListProvider>()
-                                      .remove(widget._entry);
-                                } else {
-                                  context
-                                      .read<WatchListProvider>()
-                                      .add(widget._entry);
+                        ExpandTapWidget(
+                          tapPadding: const EdgeInsets.all(35.0),
+                          onTap: () {},
+                          child: VerticalIconButton(
+                              icon: isOnList ? Icons.check : Icons.add,
+                              title: "My List",
+                              tap: () {
+                                if (hasTapped == false) {
+                                  hasTapped = true;
+                                  if (isOnList) {
+                                    context
+                                        .read<WatchListProvider>()
+                                        .remove(widget._entry);
+                                  } else {
+                                    context
+                                        .read<WatchListProvider>()
+                                        .add(widget._entry);
+                                  }
                                 }
-                              }
-                            }),
+                              }),
+                        ),
                         const Spacer(),
                         VerticalIconButton(
                             icon: Icons.thumb_up, title: "Rate", tap: () {}),
@@ -272,6 +276,7 @@ class _DetailHeader extends StatelessWidget {
                             color: Colors.white,
                             onPressed: () {},
                             child: const Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(Icons.play_arrow),
@@ -283,6 +288,7 @@ class _DetailHeader extends StatelessWidget {
                             color: Colors.white.withAlpha(40),
                             onPressed: () {},
                             child: const Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
