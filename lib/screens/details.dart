@@ -49,61 +49,89 @@ class _DetailsScreenState extends State<DetailsScreen> {
     bool isOnList = context.watch<WatchListProvider>().isOnList(widget._entry);
     bool hasTapped = false;
     return Scaffold(
-        body: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _DetailHeader(featured: widget._entry),
-        const SizedBox(
-          height: 20,
+      body: DefaultTextStyle(
+        style: Theme.of(context).textTheme.bodyMedium!,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: viewportConstraints.maxHeight,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    _DetailHeader(featured: widget._entry),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: Text(widget._entry.description ?? "",
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.white)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      child: Text("Cast: ${widget._entry.cast.join(", ")}",
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.white)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      child: Text("Genre: ${widget._entry.genres.join(", ")}",
+                          style: const TextStyle(
+                              fontSize: 12, color: Colors.white)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      child: Text("Tags: ${widget._entry.tags.join(", ")}",
+                          style: const TextStyle(
+                              fontSize: 12, color: Colors.white)),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                      child: Text(""),
+                    ),
+                    Row(
+                      children: [
+                        const Spacer(),
+                        VerticalIconButton(
+                            icon: isOnList ? Icons.check : Icons.add,
+                            title: "My List",
+                            tap: () {
+                              if (hasTapped == false) {
+                                hasTapped = true;
+                                if (isOnList) {
+                                  context
+                                      .read<WatchListProvider>()
+                                      .remove(widget._entry);
+                                } else {
+                                  context
+                                      .read<WatchListProvider>()
+                                      .add(widget._entry);
+                                }
+                              }
+                            }),
+                        const Spacer(),
+                        VerticalIconButton(
+                            icon: Icons.thumb_up, title: "Rate", tap: () {}),
+                        const Spacer(),
+                        VerticalIconButton(
+                            icon: Icons.share, title: "Share", tap: () {}),
+                        const Spacer(),
+                      ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                      child: Text(""),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         ),
-        Expanded(
-            child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child: Text(widget._entry.description ?? "",
-              style: const TextStyle(fontSize: 14, color: Colors.white)),
-        )),
-        const SizedBox(height: 20),
-        Expanded(
-            child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child: Text("Starring: ${widget._entry.cast.join(",")}",
-              style: const TextStyle(fontSize: 12, color: Colors.white)),
-        )),
-        const Spacer(),
-        Expanded(
-            child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Spacer(),
-            ExpandTapWidget(
-              onTap: () {},
-              tapPadding: const EdgeInsets.all(25.0),
-              child: VerticalIconButton(
-                  icon: isOnList ? Icons.check : Icons.add,
-                  title: "My List",
-                  tap: () {
-                    if (hasTapped == false) {
-                      hasTapped = true;
-                      if (isOnList) {
-                        context.read<WatchListProvider>().remove(widget._entry);
-                      } else {
-                        context.read<WatchListProvider>().add(widget._entry);
-                      }
-                    }
-                  }),
-            ),
-            const Spacer(),
-            VerticalIconButton(icon: Icons.thumb_up, title: "Rate", tap: () {}),
-            const Spacer(),
-            VerticalIconButton(icon: Icons.share, title: "Share", tap: () {}),
-            const Spacer(),
-          ],
-        )),
-        const Spacer(),
-      ],
-    ));
+      ),
+    );
   }
 }
 
