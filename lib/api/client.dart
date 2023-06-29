@@ -14,10 +14,10 @@ class ApiClient {
   Client get _client {
     Client client = Client();
 
+ 
     client
-        .setEndpoint('https://demo.appwrite.io/v1')
-        .setProject('almostNetflix2')
-        .setSelfSigned();
+        .setEndpoint('https://cloud.appwrite.io/v1')
+        .setProject('almost-netflix');
 
     return client;
   }
